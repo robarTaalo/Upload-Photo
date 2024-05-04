@@ -1,10 +1,10 @@
 package abc.abc.upload_photo.login;
 
-// كلاس داتا يحتوي علي اسماء الدول وكود الاتصال الدولي بالهاتف
+
 
 
 public class CountryData {
-    // مصفوفة باسماء الدول
+
     public static final String[] countryNames = {"Afghanistan", "Albania",
             "Algeria", "Andorra", "Angola", "Antarctica", "Argentina",
             "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan",
@@ -49,7 +49,7 @@ public class CountryData {
             "Uruguay", "United States", "Uzbekistan", "Vanuatu",
             "Holy See (vatican City State)", "Venezuela", "Viet Nam",
             "Wallis And Futuna", "Yemen", "Zambia", "Zimbabwe"};
-    // مصفوفة بكود اتصال الهاتف بنفس ترتيب المصفوفة الاولي
+
     public static final String[] countryAreaCodes = {"93", "355", "213",
             "376", "244", "672", "54", "374", "297", "61", "43", "994", "973",
             "880", "375", "32", "501", "229", "975", "591", "387", "267", "55",

@@ -31,39 +31,39 @@ import abc.abc.upload_photo.R;
 
 public class UserPhoneSignup extends AppCompatActivity {
 
-    Spinner countryCodeSpinner;// عمل spinner لاختيار الدولة
+    Spinner countryCodeSpinner;
     String verifyCode;
     String TAG = "UserPhoneSignup";
     EditText editTextPhoneNo, editTextCode;
     Button registerButton;
     String phoneNo;
     private FirebaseAuth mAuth;
-    // انشاء متغير التنصت علي الحدث والذي يعطيني اوتوماتك ثلاثة دوال للعمل
+
     private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        // الدالة الاولي عند ارسال الكود
+
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
-            verifyCode = s;// الحصول علي الكود المرسل من الفيربيز
+            verifyCode = s;
             Log.d(TAG, " onCodeSent: " + s);
             Log.i(TAG, " onCodeSent22: " + s);
             registerButton.setText(R.string.register);
             editTextCode.setVisibility(View.VISIBLE);
         }
 
-        // الدالة الثانية عند استقبال الكود علي الجهاز الذي يعمل به تطبيقنا هذا
+
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-            String code = phoneAuthCredential.getSmsCode();// الحصول علي الكود الذي تم استقباله علي الجهاز
+            String code = phoneAuthCredential.getSmsCode();
             if (code != null) {
-                login(code);// ارسال الكود للدالة ok للتاكد من صحته وتسجيل دخول المستخدم
+                login(code);
             }
         }
 
-        // عند فشل عملية تاكيد الكود
+
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-            // اظهار رسالة تفيد ان رقم الهاتف خطأ
+
             Toast.makeText(getApplicationContext(), "bad phonenumber", Toast.LENGTH_LONG).show();
         }
     };
@@ -80,23 +80,23 @@ public class UserPhoneSignup extends AppCompatActivity {
                 new ArrayAdapter<>(this,
                         android.R.layout.simple_spinner_dropdown_item,
                         CountryData.countryNames));
-        // اختيار المانيا كقيمة افتراضية
+
         countryCodeSpinner.setSelection(66);
-        mAuth = FirebaseAuth.getInstance();// FirebaseAuthتعريف
+        mAuth = FirebaseAuth.getInstance();
 
     }
 
-    // عند الضغط علي زر تسجيل
+
     public void RegisterByPhone(View view) {
         Button b = (Button) view;
         String buttonText = b.getText().toString();
         if (buttonText.equals(getResources().getString(R.string.sendcode))) {
-            String p1 = editTextPhoneNo.getText().toString().trim();// الحصول علي رقم الهاتف من edittext
-            // الحصول علي كود الدولة من كلاس country عن طريق معرفة اختيار المستخدم لاسم الدولة
+            String p1 = editTextPhoneNo.getText().toString().trim();
+
             String cod = CountryData.countryAreaCodes[countryCodeSpinner.getSelectedItemPosition()];
-            phoneNo = "+" + cod + p1;// تكوين رقم الهاتف بالكامل كود الدولة +رقم الهاتف
+            phoneNo = "+" + cod + p1;
             Toast.makeText(getApplicationContext(), phoneNo, Toast.LENGTH_LONG).show();
-            if (!p1.isEmpty()) {// التاكد ان رقم الهاتف ليس فارغ
+            if (!p1.isEmpty()) {
                 PhoneAuthOptions options =
                         PhoneAuthOptions.newBuilder(mAuth)
                                 .setPhoneNumber(phoneNo)       // Phone number to verify
@@ -108,24 +108,22 @@ public class UserPhoneSignup extends AppCompatActivity {
             }
         }
         if (buttonText.equals(getResources().getString(R.string.register))) {
-            String code = editTextCode.getText().toString();// الحصول علي الكود من edittext
-            if (code.length() == 6) {// التاكد ان طول النص يساوي 6 لان الكود هو 6 ارقام
-                login(code);// ارسال الكود للدالة ok للتاكد من صحته وتسجيل دخول المستخدم
+            String code = editTextCode.getText().toString();
+            if (code.length() == 6) {
+                login(code);
             }
         }
     }
 
-    // دالة للتاكد من ان صحة الكود الذي تم استقباله سواء اوتوماتيكيا من خلال دالةonVerificationCompleted او من خلال المستخدم
     private void login(String code) {
-        //
+
         PhoneAuthCredential pc = PhoneAuthProvider.getCredential(verifyCode, code);
-        // تسجيل دخول المستخدم عن طريق  PhoneAuthCredential والتصنت علي اتمام العملية
         mAuth.signInWithCredential(pc).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             // دالة اكمال العملية
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {// شرط التحقق من نجاح العملية
-                    String userid = task.getResult().getUser().getUid();// الحصول علي id المستخدم المسجل في firebase
+                if (task.isSuccessful()) {
+                    String userid = task.getResult().getUser().getUid();
                     User myUser = new User();
                     myUser.setUuid(userid);
                     myUser.setProvider("Phone");
@@ -133,12 +131,12 @@ public class UserPhoneSignup extends AppCompatActivity {
                     myUser.setPhoto(phoneNo);
                     DatabaseReference dref = FirebaseDatabase.getInstance().getReference().child("users").child(userid);
                     dref.setValue(myUser);
-                    // الانتقال الي شاشة   عند نجاح العملية
+
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
 
                 } else {
-                    // اظهار رسالة تفيد ان الكود  خطأوفشل عملية التسجيل
+
                     Toast.makeText(getApplicationContext(), "Wrong code", Toast.LENGTH_LONG).show();
                 }
             }

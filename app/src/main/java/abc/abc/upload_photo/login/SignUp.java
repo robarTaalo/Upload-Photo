@@ -41,17 +41,17 @@ public class SignUp extends AppCompatActivity {
         editTextMail = findViewById(R.id.editTextMail);
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
-        mAuth = FirebaseAuth.getInstance();// FirebaseAuthتعريف
+        mAuth = FirebaseAuth.getInstance();
     }
 
-    // دالة تنفذ عند الضغط علي زر تسجيل
+
     public void Regeister(View view) {
 
-        smail = editTextMail.getText().toString();// الحصول علي الميل الذي تم ادخاله
-        spass = editTextPassword.getText().toString();// الحصول علي الباسورد
-        String sconfirm = editTextConfirmPassword.getText().toString();// الحصول علي تاكيد الباسورد
-        String fullname = editTextFullname.getText().toString();// الحصول علي
-        String address = editTextAddress.getText().toString();// الحصول علي
+        smail = editTextMail.getText().toString();
+        spass = editTextPassword.getText().toString();
+        String sconfirm = editTextConfirmPassword.getText().toString();
+        String fullname = editTextFullname.getText().toString();
+        String address = editTextAddress.getText().toString();
         if (fullname.length() < 6) {
             Toast.makeText(this, getResources().getString(R.string.checkfullname), Toast.LENGTH_LONG).show();
             return;
@@ -69,30 +69,30 @@ public class SignUp extends AppCompatActivity {
             return;
         }
 
-        if (spass.equals(sconfirm)) {// التاكد من ان الباسورد والتكيد متطابقان
-            // انشاء مستخدم جديد بالميل والباسورد والتصنت علي اتمام العملية
+        if (spass.equals(sconfirm)) {
+
             mAuth.createUserWithEmailAndPassword(smail, spass)
                     .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {// التاكد من نجاح العملية
-                            userid = task.getResult().getUser().getUid();// الحصول علي id المستخدم المسجل في firebase
+                        if (task.isSuccessful()) {
+                            userid = task.getResult().getUser().getUid();
 
-                            verify();// تفعيل دالة ارسال ايميل اثبات الملكية
-                        } else { // في حالة عدم نجاح العملية ارسال رسالة خطأ
+                            verify();
+                        } else {
                             Toast.makeText(this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
-        } else {// في حالة عدم تطابق الباسورد مع التاكيد يظهر رسالة خطأ
+        } else {
             Toast.makeText(this, getResources().getString(R.string.checkpassconfirm), Toast.LENGTH_LONG).show();
         }
     }
 
-    // دالة ارسال ميل اثبات ملكية
+
     private void verify() {
-// ارسال ميل اثبات ملكية والتصنت علي العملية
+
         mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(this, task -> {
 
-            if (task.isSuccessful()) {// في حالة نجاح العملية
-                // الاتصال بقاعدة بيانات ال firebase لتسجيل المستخدم والسماح له بالعمل
+            if (task.isSuccessful()) {
+
                 DatabaseReference dref = FirebaseDatabase.getInstance().getReference().child("users").child(userid);
                 dref.child("providers").setValue("mail");
                 dref.child("enabled").setValue(true);
@@ -101,7 +101,7 @@ public class SignUp extends AppCompatActivity {
                 dref.child("address").setValue(editTextAddress.getText().toString());
                 gosignin(null);
 
-            } else {// في حالة فشل العملية حذف التسجيل في firebase Auth واظهار رسالة خطأ
+            } else {
                 mAuth.getCurrentUser().delete();
                 Toast.makeText(this, getResources().getString(R.string.checkmail), Toast.LENGTH_LONG).show();
             }
@@ -109,11 +109,11 @@ public class SignUp extends AppCompatActivity {
     }
 
     public void gosignin(View view) {
-// انشاء intent للانتقال الي شاشة تسجيل الدخول
+
         Intent intent = new Intent(this, Login.class);
-        intent.putExtra("mail", smail);//  اضافة الميل الي intent لارساله الي شاشة تسجيل الدخول
-        intent.putExtra("pass", spass);// اضافة الباسورد الي intent
-        startActivity(intent);// الذهاب الي شاشة تسجيل الدخول
+        intent.putExtra("mail", smail);
+        intent.putExtra("pass", spass);
+        startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }

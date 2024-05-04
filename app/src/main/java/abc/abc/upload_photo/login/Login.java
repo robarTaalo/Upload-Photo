@@ -59,7 +59,7 @@ public class Login extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        mAuth = FirebaseAuth.getInstance();// FirebaseAuthتعريف
+        mAuth = FirebaseAuth.getInstance();
         FirebaseAuth.getInstance().signOut();
         googleImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,24 +142,23 @@ public class Login extends AppCompatActivity {
     }
 
     public void signInWithEmailAndPassword(View view) {
-        String smail = editTextMail.getText().toString();// الحصول علي الميل من edittext الخاص بالميل
-        String spass = editTextPassword.getText().toString();// الحصول علي الباسورد
+        String smail = editTextMail.getText().toString();
+        String spass = editTextPassword.getText().toString();
         final ValueEventListener[] vel = {null};
-// تسجيل الدخول بالباسورد والميل وعمل تصنت علي العملية
 
         mAuth.signInWithEmailAndPassword(smail, spass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                // التاكد من نجاح العملية
-                if (task.isSuccessful()) {// اذا تم نجاح العملية
-                    if (mAuth.getCurrentUser().isEmailVerified()) {// التاكد من اثبات ملكية الميل
+
+                if (task.isSuccessful()) {
+                    if (mAuth.getCurrentUser().isEmailVerified()) {
                         updateUI();
                     } else {
-                        // اظهار رسالة تطلب اثبات ملكية الميل
+
                         Toast.makeText(getApplicationContext(), " please verify your E-Mail", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    // اظهار رسالة تفيد ان خطأ في الميل او الباسورد
+
                     Toast.makeText(getApplicationContext(), " Invalid E-Mail or password", Toast.LENGTH_LONG).show();
                 }
             }

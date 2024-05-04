@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_my_photos">
+
+    <fragment
+        android:id="@+id/nav_my_photos"
+        android:name="abc.abc.upload_photo.fragment.myphotos.MyPhotosFragment"
+        android:label="@string/menu_my_photos"
+        tools:layout="@layout/fragment_my_photos" />
+
+    <fragment
+        android:id="@+id/nav_new_photo"
+        android:name="abc.abc.upload_photo.fragment.newphoto.NewPhotoFragment"
+        android:label="@string/menu_new_photo"
+        tools:layout="@layout/fragment_new_photo" />
+    <fragment
+        android:id="@+id/nav_single_photo"
+        android:name="abc.abc.upload_photo.fragment.singlephoto.SinglePhotoFragment"
+        android:label="@string/menu_single_photo"
+        tools:layout="@layout/fragment_single_photo" />
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="abc.abc.upload_photo.fragment.LogoutFragment"
+        android:label="@string/menu_logout" />
+    <fragment
+        android:id="@+id/nav_exit"
+        android:name="abc.abc.upload_photo.fragment.ExitFragment"
+        android:label="@string/menu_exit" />
+</navigation>
